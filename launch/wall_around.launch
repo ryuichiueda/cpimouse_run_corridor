@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find raspimouse_ros_2)/launch/raspimouse.launch" /> 
+  <node pkg="cpimouse_run_corridor" name="wall_around" type="wall_around" required="true" />
+</launch>
