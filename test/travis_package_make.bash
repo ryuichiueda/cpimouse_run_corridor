@@ -1,11 +1,12 @@
 #!/bin/bash -xve
 
-#sync and make
-rsync -av ./ ~/catkin_ws/src/cpimouse_run_corridor/
+#ワークスペースにリポジトリをコピー
+rsync -av ./ ~/catkin_ws/src/pimouse_run_corridor/
 
-#clone raspimouse_ros_2
+#pimouse_rosをgit cloneでワークスペースに持ってくる
 cd ~/catkin_ws/src/
-git clone https://github.com/citueda/raspimouse_ros_2.git
+git clone --depth=1 https://github.com/citueda/pimouse_ros.git
+        #↑depth=1を指定すると最新のものだけクローンできる
 
 cd ~/catkin_ws
 catkin_make

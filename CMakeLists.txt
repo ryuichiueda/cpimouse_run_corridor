@@ -127,13 +127,16 @@ include_directories(
 
 ## Declare a C++ executable
 add_executable(wall_stop src/wall_stop.cpp)
+add_executable(wall_stop_accel src/wall_stop_accel.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(wall_stop ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(wall_stop_accel ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(wall_stop ${catkin_LIBRARIES})
+target_link_libraries(wall_stop_accel ${catkin_LIBRARIES})
 
 #############
 ## Install ##
