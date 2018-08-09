@@ -13,6 +13,8 @@ cd ./ros_setup_scripts_Ubuntu16.04_server
 bash ./step0.bash
 bash ./step1.bash
 
+sudo apt install ros-kinetic-tf2
+
 #catkin setup
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
