@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find raspimouse_ros_2)/launch/raspimouse.launch" /> 
+  <node pkg="cpimouse_run_corridor" name="wall_trace" type="wall_trace" required="true" />
+  <test test-name="test_wall_trace" pkg="cpimouse_run_corridor" type="travis_test_wall_trace.py" />
+</launch>

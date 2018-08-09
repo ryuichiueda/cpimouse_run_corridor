@@ -9,3 +9,4 @@ install:
 script:
   - rostest cpimouse_run_corridor wall_stop.launch
   - rostest cpimouse_run_corridor wall_stop_accel.launch
+  - rostest cpimouse_run_corridor wall_trace.launch
