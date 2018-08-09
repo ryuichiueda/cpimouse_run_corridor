@@ -8,7 +8,7 @@
 #include "signal.h"
 using namespace ros;
 
-/* wall_stop.cpp
+/* wall_stop_accel.cpp
  * Copyright (c) 2018 Ryuichi Ueda <ryuichiueda@gmail.com>
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php */
@@ -37,22 +37,6 @@ void run(Publisher *pub)
 		tw.linear.x = 0.0;
 	}
 	pub->publish(tw);
-/*
-class WallTrace():
-    def run(self):
-        rate = rospy.Rate(10)
-        data = Twist()
-
-        while not rospy.is_shutdown():
-            data.linear.x = 0.2
-            data.angular.z = 0
-            if self.sensor_values.sum_all >= 500:
-                data.linear.x = 0
-                data.angular.z = 0
-
-            self.cmd_vel.publish(data)
-            rate.sleep()
-    */
 }
 
 int main(int argc, char **argv)
