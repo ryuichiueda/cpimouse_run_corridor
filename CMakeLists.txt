@@ -118,9 +118,7 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(cpimouse_run_corridor
-#   src/${PROJECT_NAME}/cpimouse_run_corridor.cpp
-# )
+add_library(WallStop src/WallStop.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -135,13 +133,14 @@ add_executable(wall_around src/wall_around.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
+add_dependencies(WallStop ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(wall_stop ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(wall_stop_accel ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(wall_trace ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(wall_around ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(wall_stop ${catkin_LIBRARIES})
+target_link_libraries(wall_stop WallStop ${catkin_LIBRARIES})
 target_link_libraries(wall_stop_accel ${catkin_LIBRARIES})
 target_link_libraries(wall_trace ${catkin_LIBRARIES})
 target_link_libraries(wall_around ${catkin_LIBRARIES})
