@@ -35,17 +35,17 @@ void onSigint(int sig)
 
 bool wall_front(void)
 {
-	return sensor_left_forward > 50 or sensor_right_forward > 50;
+	return sensor_left_forward > 100 or sensor_right_forward > 100;
 }
 
 bool too_right(void)
 {
-	return sensor_right_side > 50;
+	return sensor_right_side > 100;
 }
 
 bool too_left(void)
 {
-	return sensor_left_side > 50;
+	return sensor_left_side > 100;
 }
 
 void run(Publisher *pub)

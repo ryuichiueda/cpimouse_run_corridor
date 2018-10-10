@@ -8,17 +8,10 @@
 #include "signal.h"
 using namespace ros;
 
-/* wall_stop_accel.cpp
+/* wall_stop.cpp
  * Copyright (c) 2018 Ryuichi Ueda <ryuichiueda@gmail.com>
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php */
-
-int sensor_sum_all = 0;
-
-void callback(const raspimouse_ros_2::LightSensorValues::ConstPtr& msg)
-{
-	sensor_sum_all = msg->sum_all;
-}
 
 void onSigint(int sig)
 {
@@ -27,28 +20,47 @@ void onSigint(int sig)
 	shutdown();
 }
 
-void run(Publisher *pub)
+class WallStop
 {
-	geometry_msgs::Twist tw;
-	tw.linear.x = 0.2;
-	tw.angular.z = 0.0;
+public:
+	WallStop(){
+		n = NodeHandle("~");
+	
+		pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
+		sub = n.subscribe("/lightsensors", 1, &WallStop::callback, this);
 
-	if(sensor_sum_all >= 500){
-		tw.linear.x = 0.0;
+		service::waitForService("/motor_on");
+		service::waitForService("/motor_off");
 	}
-	pub->publish(tw);
-}
+
+	void callback(const raspimouse_ros_2::LightSensorValues::ConstPtr& msg)
+	{
+		sensor_sum_all = msg->sum_all;
+	}
+
+	void run()
+	{
+		geometry_msgs::Twist tw;
+		tw.linear.x = 0.2;
+		tw.angular.z = 0.0;
+	
+		if(sensor_sum_all >= 500){
+			tw.linear.x = 0.0;
+		}
+		pub.publish(tw);
+	}
+
+private:
+	int sensor_sum_all;
+	NodeHandle n;
+	Publisher pub;
+	Subscriber sub;
+};
 
 int main(int argc, char **argv)
 {
 	init(argc,argv,"wall_stop");
-	NodeHandle n("~");
-	
-	Publisher pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
-	Subscriber sub = n.subscribe("/lightsensors", 1, callback);
-
-	service::waitForService("/motor_on");
-	service::waitForService("/motor_off");
+	WallStop w = WallStop();
 
 	signal(SIGINT, onSigint);
 
@@ -62,7 +74,7 @@ int main(int argc, char **argv)
 
 	unsigned int c = 0;
 	while(ok()){
-		run(&pub);
+		w.run();
 		spinOnce();
 		loop_rate.sleep();
 	}
