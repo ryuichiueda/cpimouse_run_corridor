@@ -24,13 +24,11 @@ class WallStop
 {
 public:
 	WallStop(){
-		n = NodeHandle("~");
-	
-		pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
-		sub = n.subscribe("/lightsensors", 1, &WallStop::callback, this);
-
 		service::waitForService("/motor_on");
 		service::waitForService("/motor_off");
+		signal(SIGINT, onSigint);
+		std_srvs::Trigger trigger;
+		service::call("/motor_on", trigger);
 	}
 
 	void callback(const raspimouse_ros_2::LightSensorValues::ConstPtr& msg)
@@ -44,35 +42,27 @@ public:
 		tw.linear.x = 0.2;
 		tw.angular.z = 0.0;
 	
-		if(sensor_sum_all >= 500){
+		if(sensor_sum_all >= 500)
 			tw.linear.x = 0.0;
-		}
+
 		pub.publish(tw);
 	}
 
 private:
-	int sensor_sum_all;
-	NodeHandle n;
-	Publisher pub;
-	Subscriber sub;
+	int sensor_sum_all = 0;
+	NodeHandle n = NodeHandle("~");
+	Publisher pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
+	Subscriber sub = n.subscribe("/lightsensors", 1, &WallStop::callback, this);
 };
 
 int main(int argc, char **argv)
 {
 	init(argc,argv,"wall_stop");
-	WallStop w = WallStop();
-
-	signal(SIGINT, onSigint);
-
-	std_srvs::Trigger trigger;
-	service::call("/motor_on", trigger);
+	WallStop w;
 
 	int freq = 10;
-
 	ros::Rate loop_rate(freq);
-	raspimouse_ros_2::LightSensorValues msg;
 
-	unsigned int c = 0;
 	while(ok()){
 		w.run();
 		spinOnce();
