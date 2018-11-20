@@ -9,7 +9,7 @@ class WallStopTest(unittest.TestCase):
             f.write("%d %d %d %d\n" % (rf,rs,ls,lf))
             f.flush()
 
-        time.sleep(0.3)
+        time.sleep(1.0)
 
         with open("/dev/rtmotor_raw_l0","r") as lf,\
              open("/dev/rtmotor_raw_r0","r") as rf:
